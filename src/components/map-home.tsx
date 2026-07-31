@@ -152,7 +152,7 @@ function nearestSnap(height: number, viewportH: number): SheetSnap {
   return best;
 }
 
-export function MapHome() {
+export function MapHome({ kakaoMapAppKey = "" }: { kakaoMapAppKey?: string }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryId>("recent");
   const [snap, setSnap] = useState<SheetSnap>("collapsed");
@@ -322,7 +322,7 @@ export function MapHome() {
       </header>
 
       <div ref={mapAreaRef} className="relative min-h-0 flex-1">
-        <KakaoMap />
+        <KakaoMap appKey={kakaoMapAppKey} />
 
       {/* 하단 시트 */}
       <section

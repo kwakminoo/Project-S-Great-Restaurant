@@ -7,6 +7,8 @@ const KAKAO_SDK = "https://dapi.kakao.com/v2/maps/sdk.js";
 
 type KakaoMapProps = {
   className?: string;
+  /** 서버에서 주입한 카카오 JS 키 (정적 빌드 시 빈 값 방지) */
+  appKey?: string;
 };
 
 function loadKakaoSdk(appKey: string): Promise<void> {
@@ -35,7 +37,10 @@ function loadKakaoSdk(appKey: string): Promise<void> {
   });
 }
 
-export function KakaoMap({ className }: KakaoMapProps) {
+export function KakaoMap({
+  className,
+  appKey: appKeyProp,
+}: KakaoMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<{ relayout: () => void } | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "missing" | "error">(
@@ -43,7 +48,11 @@ export function KakaoMap({ className }: KakaoMapProps) {
   );
 
   useEffect(() => {
-    const appKey = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY?.trim();
+    // prop 우선(서버 런타임 주입), 없으면 빌드타임 NEXT_PUBLIC
+    const appKey =
+      appKeyProp?.trim() ||
+      process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY?.trim() ||
+      "";
     if (!appKey) {
       setStatus("missing");
       return;
@@ -139,11 +148,11 @@ export function KakaoMap({ className }: KakaoMapProps) {
             <p className="mt-2 text-sm leading-relaxed text-muted">
               {status === "missing" && (
                 <>
+                  카카오맵 앱 키가 없습니다. Vercel 환경 변수{" "}
                   <code className="rounded bg-surface-soft px-1.5 py-0.5 text-xs">
                     NEXT_PUBLIC_KAKAO_MAP_APP_KEY
                   </code>
-                  를 <code className="text-xs">.env.local</code>에 넣으면
-                  카카오맵이 여기에 표시됩니다.
+                  를 Production에 넣고 다시 배포해 주세요.
                 </>
               )}
               {status === "loading" && "카카오맵을 불러오는 중…"}
