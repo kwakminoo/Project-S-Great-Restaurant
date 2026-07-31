@@ -21,7 +21,7 @@ const CARDS_PER_PAGE = 4;
 /** SSR·첫 클라이언트 렌더 공통 값. window는 useEffect에서만 읽음 */
 const DEFAULT_VIEWPORT_H = 800;
 const SHEET = {
-  collapsed: 52,
+  collapsed: 48,
   halfRatio: 0.48,
   fullRatio: 0.86,
 } as const;
@@ -231,7 +231,7 @@ export function MapHome() {
     setSheetH(snapHeight(nextSnap, viewportH.current));
   }, [dragging, sheetH]);
 
-  const showList = sheetH > SHEET.collapsed + 28;
+  const showList = sheetH > SHEET.collapsed + 24;
 
   return (
     <div className="flex h-dvh w-full flex-col overflow-hidden bg-background">
